@@ -1,5 +1,3 @@
-#!gasapp/bin/
-
 from BeautifulSoup import BeautifulSoup
 import requests
 import re
