@@ -6,8 +6,9 @@ import re
 from flask import Flask,render_template,request,Markup
 from app import app
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def mainPage():
+    """Main Section of the App"""
     city = ''
     if request.method == 'POST':
         city = request.form['city']
@@ -24,12 +25,12 @@ def mainPage():
     tagremover = re.compile(r'(<\/*?)(?!(em|p|br\s*\/|strong))\w+?.+?>')
     if city != "":
 
-        for x  in xrange(10):
+        for x in xrange(10):
             x = str(x)
-            #Initial entries going through rows.
+            # Initial entries going through rows.
             entries = (soup.find("tr", {"id": "rrlow_"+x}))
-            if entries != None:
-            #finds the name
+            if entries:
+            # Finds the name
                 name = entries.find("dt")
                 if name.text != "":
                     name = name.text
@@ -38,21 +39,20 @@ def mainPage():
                     name = Markup(name)
                 lstname.append(name)
             
-            #Finds the Price
-                conv = entries.find("div", {"class": "sp_p"})
-                strconv = str(conv)
-                strconv = re.sub(r'[^\d]','',strconv)
-                strconv = strconv[:1] +"." +strconv[1:]
-                lstconv.append(strconv)
+            # Finds the Price
+                price = entries.find("div", {"class": "sp_p"})
+                strprice = str(price)
+                strprice = re.sub(r'[^\d]','',strprice)
+                strprice = strprice[:1] +"." +strprice[1:]
+                lstconv.append(strprice)
 
-
-            #Finds when Last Updated
+            # Finds when Last Updated
                 lastupdate = entries.find("div", {"class":"tm"})
                 lastupdate = str(lastupdate)
                 lastupdate = re.sub(tagremover,'',lastupdate)
                 lstlastupdate.append(lastupdate)
 
-            #Finds the Address
+            # Finds the Address
                 readdress = entries.find("dd")
                 if readdress != "":
                     readdress = str(readdress)
@@ -60,10 +60,11 @@ def mainPage():
                     readdress = re.sub(r'&amp','&',readdress)
                     address.append(readdress)
         rangex = xrange(len(lstconv))
+        # Sends this to the web page
     return render_template("index.html",
-        address = address,
-        lstlastupdate=lstlastupdate,
-        lstconv = lstconv,
-        lstname = lstname,
-        city=city,
-        rangex = rangex)
+                            address = address,
+                            lstlastupdate=lstlastupdate,
+                            lstconv = lstconv,
+                            lstname = lstname,
+                            city=city,
+                            rangex = rangex)
