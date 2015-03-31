@@ -17,8 +17,11 @@ def mainPage():
         city = request.form['city']
         if ' ' in city:
             city = re.sub(' ', '_', city)
-    stateandcity = 'http://www.'+state+'gasprices.com/'+city+'/index.aspx'
+        if '.' in city:
+            city = city.replace('.', '')
 
+    stateandcity = 'http://www.'+state+'gasprices.com/'+city+'/index.aspx'
+    print stateandcity
     r = requests.get(stateandcity)
     soup = BeautifulSoup(r.content)
     entries = []
