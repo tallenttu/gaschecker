@@ -7,10 +7,19 @@ from app import app
 @app.route('/', methods=['GET', 'POST'])
 def mainPage():
     """Main Section of the App"""
+    state = ""
     city = ''
     if request.method == 'POST':
+        space = " "
+        state = request.form['state']
+        if ' ' in state:
+            state = re.sub(' ', '', state)
         city = request.form['city']
-    r = requests.get('http://www.tennesseegasprices.com/'+city+'/index.aspx')
+        if ' ' in city:
+            city = re.sub(' ', '_', city)
+    stateandcity = 'http://www.'+state+'gasprices.com/'+city+'/index.aspx'
+
+    r = requests.get(stateandcity)
     soup = BeautifulSoup(r.content)
     entries = []
     address = []
