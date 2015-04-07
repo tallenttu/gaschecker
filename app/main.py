@@ -82,3 +82,4 @@ def mainPage():
 @app.route('/login', methods=['GET', 'POST'])
 def loginpage():
     return render_template("login.html")
+
